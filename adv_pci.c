@@ -16,6 +16,8 @@
 # endif
 
 #define ADVANTECH_VANDORID 0x13FE
+#define PCI_VENDOR_ID_PR6120 (0x0706)
+#define PCI_DEVICE_ID_PR6120 (0x3B02)
 /* used for storing the global pci register address */
 /* one element more than needed for marking the end */
 struct	pci_dev *Can_pcidev[MAX_CHANNELS + 1] = { 0 };
@@ -58,6 +60,7 @@ static struct pci_device_id can_board_table[] = {
    {ADVANTECH_VANDORID, 0xc301, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_ANY_ID},
    {ADVANTECH_VANDORID, 0xc302, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_ANY_ID},
    {ADVANTECH_VANDORID, 0xc304, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_ANY_ID},
+   {PCI_VENDOR_ID_PR6120, PCI_DEVICE_ID_PR6120, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_ANY_ID},
    {0,}			
 };
 
@@ -104,7 +107,8 @@ static int can_init_one(struct pci_dev *pdev, const struct pci_device_id *id )
       || pdev->device == 0xc204
       || pdev->device == 0xc301
       || pdev->device == 0xc302
-      || pdev->device == 0xc304 )
+      || pdev->device == 0xc304
+      || pdev->device == PCI_DEVICE_ID_PR6120 )
    {
 	portNum = pdev->device & 0xf;
    	offset = 0x400;
@@ -161,7 +165,8 @@ static int can_init_one(struct pci_dev *pdev, const struct pci_device_id *id )
       || pdev->device == 0xc204
       || pdev->device == 0xc301
       || pdev->device == 0xc302
-      || pdev->device == 0xc304 )
+      || pdev->device == 0xc304
+      || pdev->device == PCI_DEVICE_ID_PR6120 )
       {   
         if(NULL == request_mem_region(Base[numdevs],  addlen[numdevs], "advcan")) 
         {
@@ -224,7 +229,8 @@ error_out:
       	|| pdev->device == 0xc204
       	|| pdev->device == 0xc301
       	|| pdev->device == 0xc302
-      	|| pdev->device == 0xc304 )
+        || pdev->device == 0xc304
+        || pdev->device == PCI_DEVICE_ID_PR6120 )
    {
       release_mem_region(Base[i], addlen[i]);
    }
@@ -256,7 +262,8 @@ static void __exit can_remove_one( struct pci_dev *dev) //zdd modified
       	|| dev->device == 0xc204
       	|| dev->device == 0xc301
       	|| dev->device == 0xc302
-      	|| dev->device == 0xc304 )
+        || dev->device == 0xc304
+        || dev->device == PCI_DEVICE_ID_PR6120 )
 	{
     	 	iounmap(can_base[i]);
 		release_mem_region(Base[i], addlen[i]);
